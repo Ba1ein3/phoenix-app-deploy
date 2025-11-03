@@ -1,0 +1,7 @@
+[build]
+  command = "ng build phoenix-app --configuration production"
+  publish = "packages/phoenix-ng/dist/phoenix-app"
+
+[build.files]
+  included = ["*"]
+  excluded = ["packages/phoenix-ng/projects/phoenix-app/cypress/e2e/__image_snapshots__/**/*"]
