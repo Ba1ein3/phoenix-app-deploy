@@ -1,0 +1,16 @@
+<div class="d-flex flex-row align-items-center">
+  <mat-slider class="mx-2" [min]="min" [max]="max" [step]="step" thumbLabel>
+    <input
+      matSliderThumb
+      [value]="value"
+      (valueChange)="onValueChange($event)"
+    />
+  </mat-slider>
+  <input
+    *ngIf="allowCustomValue"
+    class="config-slider-input"
+    type="number"
+    [value]="value"
+    (input)="onValueChange($event.target.value)"
+  />
+</div>

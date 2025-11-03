@@ -1,0 +1,65 @@
+<!-- 1. 保留原有：加载动画（加载状态+进度） -->
+<app-loader [loaded]="loaded" [progress]="loadingProgress"></app-loader>
+
+<!-- 2. 保留原有：顶部导航栏（含Phoenix Logo） -->
+<app-nav></app-nav>
+
+<!-- 3. 保留原有：带事例导入选项的功能菜单 -->
+<app-ui-menu [eventDataImportOptions]="eventDataImportOptions"></app-ui-menu>
+
+<!-- 4. 保留原有：嵌入菜单 -->
+<app-embed-menu></app-embed-menu>
+
+<!-- 5. 保留原有：实验信息（CEPC Logo + Tao标签 + 链接） -->
+<app-experiment-info
+  logo="assets/images/cepc_logo.png"
+ 
+  tagline="Tao experiment"
+></app-experiment-info>
+<!--url="http://cepc.ihep.ac.cn/intro.html"-->
+<!-- 6. 保留原有：几何控制菜单 -->
+<app-phoenix-menu [rootNode]="phoenixMenuRoot"></app-phoenix-menu>
+
+<!-- 7. 保留原有：3D事件显示容器（phoenix-event-display放入原id="eventDisplay"容器） -->
+<div id="eventDisplay" style="width: 100%; height: calc(100vh - 140px);">
+  <phoenix-event-display style="width: 100%; height: 100%;"></phoenix-event-display>
+</div>
+
+<!-- 8. 新增：自动播放控制栏（放在3D容器下方，不遮挡原有元素，样式贴合旧界面） -->
+<div style="display: flex; align-items: center; gap: 12px; padding: 10px; background: #f8f9fa; border-top: 1px solid #e9ecef;">
+  <!-- 播放/暂停按钮 -->
+  <button 
+    style="padding: 6px 12px; border: none; border-radius: 4px; background: #0d6efd; color: white; cursor: pointer;"
+    (click)="togglePlay()"
+    [disabled]="!loaded || eventKeys.length === 0"
+  >
+    {{ isPlaying ? '⏸️ stop' : '▶️ start' }}
+  </button>
+
+  <!-- 播放速度选择器 -->
+  <div style="display: flex; align-items: center; gap: 6px;">
+    <span style="color: #495057; font-size: 14px;">speed：</span>
+    <select 
+      style="padding: 6px; border: 1px solid #dee2e6; border-radius: 4px;"
+      [(value)]="playSpeed"
+      (change)="changePlaySpeed(+$event.target.value)"
+      [disabled]="!loaded || eventKeys.length === 0 || isPlaying"
+    >
+      <option *ngFor="let opt of playSpeedOptions" [value]="opt.value">
+        {{ opt.label }}
+      </option>
+    </select>
+  </div>
+
+  <!-- 事例进度显示 -->
+  <span style="color: #4207f5f9; font-size: 14px;" *ngIf="eventKeys.length > 0">
+    event {{ currentEventIndex + 1 }} / {{ eventKeys.length }}
+  </span>
+
+  <!-- 保留原有：事例导入组件（若app-ui-menu已包含，可删除；若需单独保留则保留） -->
+  <!-- 注：若app-ui-menu已实现导入功能，此句可删除，避免重复 -->
+  <phoenix-event-import 
+    style="margin-left: auto;"
+    [importOptions]="eventDataImportOptions"
+  ></phoenix-event-import>
+</div>

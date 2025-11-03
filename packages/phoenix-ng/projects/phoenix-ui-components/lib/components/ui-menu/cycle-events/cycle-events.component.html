@@ -1,0 +1,14 @@
+<button
+  class="cycle-events"
+  matTooltip="Cycle (off/on/on+reload)"
+  matTooltipPosition="above"
+  matTooltipTouchGestures="off"
+  (click)="toggleCycle()"
+>
+  <svg
+    class="cycle-events-icon"
+    [ngClass]="{ 'active-icon': active, 'reload-icon': reloading }"
+  >
+    <use href="assets/icons/cycle-events.svg#cycle-events"></use>
+  </svg>
+</button>

@@ -1,0 +1,17 @@
+{
+  "version": "2.16.0",
+  "npmClient": "yarn",
+  "packages": ["packages/*", "packages/phoenix-ng/projects/*"],
+  "command": {
+    "publish": {
+      "ignoreChanges": ["*.md", "*.txt", "*.obj"],
+      "message": "chore(release): %s",
+      "conventionalCommits": true,
+      "changelogPreset": "angular"
+    },
+    "run": {
+      "parallel": true
+    }
+  },
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json"
+}

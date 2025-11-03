@@ -1,0 +1,76 @@
+name: phoenix-release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_type:
+        type: choice
+        required: true
+        description: Type of the next version update to be released
+        options: [patch, minor, major, pre, graduate]
+        default: patch
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@main
+        with:
+          node-version: ${{ matrix.node-version }}
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Setup
+        run: |
+          yarn install
+
+          # Configure git for pushing to GitHub during release.
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+      - name: Release
+        run: yarn release:${{ inputs.release_type }} --yes
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  push-to-docker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: release
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+
+      - name: Release Version
+        id: release_version
+        run: echo "version-without-v=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Docker Hub Login
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Docker Buildx Setup
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build and Push
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_HUB_USERNAME }}/phoenix:latest
+            ${{ secrets.DOCKER_HUB_USERNAME }}/phoenix:${{ steps.release_version.outputs.version-without-v }}

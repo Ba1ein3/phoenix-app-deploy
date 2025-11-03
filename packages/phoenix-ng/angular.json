@@ -1,0 +1,153 @@
+{
+  "$schema": "../../node_modules/@angular/cli/lib/config/schema.json",
+  "cli": {
+    "analytics": "31591945-1c17-4e54-bbd8-0f4bc283f402"
+  },
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "phoenix-app": {
+      "root": "projects/phoenix-app",
+      "sourceRoot": "projects/phoenix-app/src",
+      "projectType": "application",
+      "prefix": "app",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/phoenix-app",
+            "index": "projects/phoenix-app/src/index.html",
+            "main": "projects/phoenix-app/src/main.ts",
+            "polyfills": "projects/phoenix-app/src/polyfills.ts",
+            "tsConfig": "projects/phoenix-app/tsconfig.app.json",
+            "assets": [
+              "projects/phoenix-app/src/favicon.ico",
+              "projects/phoenix-app/src/assets",
+              "projects/phoenix-app/src/api-docs"
+            ],
+            "styles": ["projects/phoenix-app/src/styles.scss"],
+            "allowedCommonJsDependencies": [
+              "css-element-queries",
+              "@tweenjs/tween.js",
+              "qrcode",
+              "jszip",
+              "detect-passive-events",
+              "stats-js",
+              "core-js"
+            ],
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/phoenix-app/src/environments/environment.ts",
+                  "with": "projects/phoenix-app/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "3mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ]
+            },
+            "singleEvent": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/phoenix-app/src/environments/environment.ts",
+                  "with": "projects/phoenix-app/src/environments/environment.single.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "3mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ]
+            }
+          },
+          "defaultConfiguration": ""
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "buildTarget": "phoenix-app:build"
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "phoenix-app:build:production"
+            },
+            "singleEvent": {
+              "buildTarget": "phoenix-app:build:singleEvent"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "phoenix-app:build"
+          }
+        }
+      }
+    },
+    "phoenix-ui-components": {
+      "projectType": "library",
+      "root": "projects/phoenix-ui-components",
+      "sourceRoot": "projects/phoenix-ui-components/lib",
+      "prefix": "app",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/phoenix-ui-components/tsconfig.lib.json",
+            "project": "projects/phoenix-ui-components/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/phoenix-ui-components/tsconfig.lib.json"
+            }
+          }
+        }
+      }
+    }
+  }
+}
